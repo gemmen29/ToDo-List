@@ -1,50 +1,50 @@
-import Task from "./TaskClass";
+import Task from './TaskClass';
 
-let tasksList = [];
+export default class TaskOperationsHelper {
+  static tasksList = [];
 
-class TaskOperationsHelper {
   static addNew(task) {
-    console.log(task instanceof Task);
     if (task instanceof Task) {
-      tasksList.push(task);
+      TaskOperationsHelper.tasksList.push(task);
     }
   }
 
   static remove(index) {
     let c = 0;
-    tasksList = tasksList
+    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList
       .filter((task) => task.index !== index)
       .map((task) => {
-        task.index = c++;
+        task.index = c;
+        c += 1;
         return task;
       });
   }
 
   static edit(index, newDescription) {
-    tasksList.map((task) => {
+    TaskOperationsHelper.tasksList.map((task) => {
       if (index === task.index) {
         task.description = newDescription;
       }
+      return task;
     });
   }
 
   static removeAllCompleted() {
     let c = 0;
-    tasksList = tasksList
+    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList
       .filter((task) => !task.completed)
       .map((task) => {
-        task.index = c++;
+        task.index = c;
+        c += 1;
         return task;
       });
   }
 
   static addMultiple(tasks) {
-    tasksList.push(...tasks);
+    TaskOperationsHelper.tasksList.push(...tasks);
   }
 
   static removeAll() {
-    tasksList = [];
+    TaskOperationsHelper.tasksList = [];
   }
 }
-
-export { TaskOperationsHelper, tasksList };
