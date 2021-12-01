@@ -1,44 +1,73 @@
-import './style.css';
+import "./style.css";
 
-const tasks = [{
-  description: 'task 1 description',
-  completed: false,
-  index: 3,
-},
-{
-  description: 'task 2 description',
-  completed: false,
-  index: 1,
-},
-{
-  description: 'task 3 description',
-  completed: true,
-  index: 2,
-}];
+import LocalStorageHelper from "./LocalStorageHelper";
+import UpdateStatusHelper from "./UpdateStatusHelper";
 
-function loadList(tasks) {
-  tasks.sort((a, b) => a.index - b.index);
-  const tasksUL = document.querySelector('#tasks');
-  tasks.forEach((task) => {
-    const li = document.createElement('li');
+let tasksList = [
+  {
+    description: "task 1 description",
+    completed: false,
+    index: 3,
+  },
+  {
+    description: "task 2 description",
+    completed: false,
+    index: 1,
+  },
+  {
+    description: "task 3 description",
+    completed: false,
+    index: 2,
+  },
+];
 
-    const containerDivForCheckText = document.createElement('div');
+let tasksKeyInLocalStorage = "tasks-list";
 
-    const liCheckBox = document.createElement('input');
-    liCheckBox.type = 'checkbox';
-    liCheckBox.checked = task.completed;
-
-    const liText = document.createTextNode(task.description);
-
-    const icon = document.createElement('a');
-    icon.classList.add('fas', 'fa-ellipsis-v', 'task-link');
-
-    containerDivForCheckText.appendChild(liCheckBox);
-    containerDivForCheckText.appendChild(liText);
-    li.appendChild(containerDivForCheckText);
-    li.appendChild(icon);
-    tasksUL.appendChild(li);
+function loadList() {
+  if (
+    LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage) !== null
+  ) {
+    tasksList = LocalStorageHelper.retrieveFromLocalStorage(
+      tasksKeyInLocalStorage
+    );
+  } else {
+    LocalStorageHelper.addToLocalStorage(tasksKeyInLocalStorage, tasksList);
+  }
+  tasksList.sort((a, b) => a.index - b.index);
+  const tasksUL = document.querySelector("#tasks");
+  tasksList.forEach((task) => {
+    tasksUL.appendChild(createLiForTask(task));
   });
 }
 
-loadList(tasks);
+function createLiForTask(task) {
+  const li = document.createElement("li");
+
+  const containerDivForCheckText = document.createElement("div");
+
+  const liCheckBox = document.createElement("input");
+  liCheckBox.type = "checkbox";
+  liCheckBox.checked = task.completed;
+
+  liCheckBox.addEventListener("change", () => {
+    UpdateStatusHelper.toggleStatus(task.index, tasksList);
+    LocalStorageHelper.updateEntryInLocalStorage(
+      tasksKeyInLocalStorage,
+      tasksList
+    );
+  });
+
+  const liText = document.createTextNode(task.description);
+
+  const icon = document.createElement("a");
+  icon.classList.add("fas", "fa-ellipsis-v", "task-link");
+
+  containerDivForCheckText.appendChild(liCheckBox);
+  containerDivForCheckText.appendChild(liText);
+  li.appendChild(containerDivForCheckText);
+  li.appendChild(icon);
+
+  return li;
+}
+
+loadList();
