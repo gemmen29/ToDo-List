@@ -18,7 +18,10 @@ class LoadContent {
     liCheckBox.checked = task.completed;
 
     liCheckBox.addEventListener('change', (e) => {
-      UpdateStatusHelper.toggleStatus(task.index, TaskOperationsHelper.tasksList);
+      UpdateStatusHelper.toggleStatus(
+        task.index,
+        TaskOperationsHelper.tasksList,
+      );
       LocalStorageHelper.updateEntryInLocalStorage(
         tasksKeyInLocalStorage,
         TaskOperationsHelper.tasksList,
@@ -34,9 +37,19 @@ class LoadContent {
 
     const liText = document.createElement('input');
     liText.type = 'text';
-    liText.disabled = true;
     liText.value = task.description;
-    liText.classList.add('task-description');
+    liText.classList.add('task-description', 'disabled');
+    liText.addEventListener('click', (e) => {
+      liText.classList.remove('disabled');
+
+      e.target.parentNode.parentNode.querySelector('#edit-btn').classList.add('d-none');
+      const deleteBtn = e.target.parentNode.parentNode.querySelector('#delete-btn');
+      deleteBtn.classList.remove('d-none');
+
+      const taskDescription = e.target.parentNode.querySelector('.task-description');
+      taskDescription.disabled = false;
+      taskDescription.focus();
+    });
     liText.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
         TaskOperationsHelper.edit(task.index, e.target.value);
@@ -58,6 +71,7 @@ class LoadContent {
     editBtn.id = 'edit-btn';
 
     editBtn.addEventListener('click', (e) => {
+      liText.classList.remove('disabled');
       e.target.classList.add('d-none');
       const deleteBtn = e.target.parentNode.querySelector('#delete-btn');
       deleteBtn.classList.remove('d-none');
@@ -91,7 +105,8 @@ class LoadContent {
 
   static loadList() {
     if (
-      LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage) !== null
+      LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage)
+      !== null
     ) {
       const tasks = LocalStorageHelper.retrieveFromLocalStorage(
         tasksKeyInLocalStorage,
@@ -99,7 +114,10 @@ class LoadContent {
       TaskOperationsHelper.removeAll();
       TaskOperationsHelper.addMultiple(tasks);
     } else {
-      LocalStorageHelper.addToLocalStorage(tasksKeyInLocalStorage, TaskOperationsHelper.tasksList);
+      LocalStorageHelper.addToLocalStorage(
+        tasksKeyInLocalStorage,
+        TaskOperationsHelper.tasksList,
+      );
     }
     TaskOperationsHelper.tasksList.sort((a, b) => a.index - b.index);
     const tasksUL = document.querySelector('#tasks');
@@ -116,7 +134,10 @@ LoadContent.loadList();
 const taskInput = document.querySelector('#task-input');
 taskInput.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && e.target.value !== '') {
-    const task = new Task(TaskOperationsHelper.tasksList.length, e.target.value);
+    const task = new Task(
+      TaskOperationsHelper.tasksList.length,
+      e.target.value,
+    );
     TaskOperationsHelper.addNew(task);
     LocalStorageHelper.updateEntryInLocalStorage(
       tasksKeyInLocalStorage,
@@ -128,7 +149,9 @@ taskInput.addEventListener('keyup', (e) => {
 });
 
 // clear all completed tasks
-const clearAllCompletedTasksBtn = document.querySelector('#clear-all-completed');
+const clearAllCompletedTasksBtn = document.querySelector(
+  '#clear-all-completed',
+);
 clearAllCompletedTasksBtn.addEventListener('click', () => {
   TaskOperationsHelper.removeAllCompleted();
   LocalStorageHelper.updateEntryInLocalStorage(

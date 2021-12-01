@@ -83,3 +83,7 @@ input[type="text"].task-description {
 .d-none {
   display: none;
 }
+
+input[type="text"].disabled {
+  color: #8f8f8f;
+}
