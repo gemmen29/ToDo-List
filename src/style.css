@@ -59,3 +59,31 @@ a.task-link {
   color: black;
   padding: 0;
 }
+
+.d-flex {
+  display: flex;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.description-check {
+  color: #757575;
+  position: relative;
+}
+
+.description-check::after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #3abbf7a2;
+  border-radius: 2px;
+}
+

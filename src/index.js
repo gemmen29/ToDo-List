@@ -44,20 +44,34 @@ function createLiForTask(task) {
   const li = document.createElement("li");
 
   const containerDivForCheckText = document.createElement("div");
+  containerDivForCheckText.classList.add("d-flex", "center");
 
   const liCheckBox = document.createElement("input");
   liCheckBox.type = "checkbox";
   liCheckBox.checked = task.completed;
 
-  liCheckBox.addEventListener("change", () => {
+  liCheckBox.addEventListener("change", (e) => {
     UpdateStatusHelper.toggleStatus(task.index, tasksList);
     LocalStorageHelper.updateEntryInLocalStorage(
       tasksKeyInLocalStorage,
       tasksList
     );
+
+    let taskDescription =
+      e.target.parentNode.querySelector(".task-description");
+    if (task.completed) {
+      taskDescription.classList.add("description-check");
+    } else {
+      taskDescription.classList.remove("description-check");
+    }
   });
 
-  const liText = document.createTextNode(task.description);
+  const liText = document.createElement("div");
+  liText.classList.add("task-description");
+  liText.textContent = task.description;
+  if (task.completed) {
+    liText.classList.add("description-check");
+  }
 
   const icon = document.createElement("a");
   icon.classList.add("fas", "fa-ellipsis-v", "task-link");
