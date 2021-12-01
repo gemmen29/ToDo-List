@@ -1,66 +1,91 @@
-import './style.css';
+import "./style.css";
 
-import LocalStorageHelper from './LocalStorageHelper';
-import UpdateStatusHelper from './UpdateStatusHelper';
+import LocalStorageHelper from "./LocalStorageHelper";
+import UpdateStatusHelper from "./UpdateStatusHelper";
+import { TaskOperationsHelper, tasksList } from "./TaskOperationsHelper";
+import Task from "./TaskClass";
 
-let tasksList = [
-  {
-    description: 'task 1 description',
-    completed: false,
-    index: 3,
-  },
-  {
-    description: 'task 2 description',
-    completed: false,
-    index: 1,
-  },
-  {
-    description: 'task 3 description',
-    completed: false,
-    index: 2,
-  },
-];
-
-const tasksKeyInLocalStorage = 'tasks-list';
+const tasksKeyInLocalStorage = "tasks-list";
 function createLiForTask(task) {
-  const li = document.createElement('li');
+  const li = document.createElement("li");
 
-  const containerDivForCheckText = document.createElement('div');
-  containerDivForCheckText.classList.add('d-flex', 'center');
+  const containerDivForCheckText = document.createElement("div");
+  containerDivForCheckText.classList.add("d-flex", "center");
 
-  const liCheckBox = document.createElement('input');
-  liCheckBox.type = 'checkbox';
+  const liCheckBox = document.createElement("input");
+  liCheckBox.type = "checkbox";
   liCheckBox.checked = task.completed;
 
-  liCheckBox.addEventListener('change', (e) => {
+  liCheckBox.addEventListener("change", (e) => {
     UpdateStatusHelper.toggleStatus(task.index, tasksList);
     LocalStorageHelper.updateEntryInLocalStorage(
       tasksKeyInLocalStorage,
-      tasksList,
+      tasksList
     );
 
-    const taskDescription = e.target.parentNode.querySelector('.task-description');
+    const taskDescription =
+      e.target.parentNode.querySelector(".task-description");
     if (task.completed) {
-      taskDescription.classList.add('description-check');
+      taskDescription.classList.add("description-check");
     } else {
-      taskDescription.classList.remove('description-check');
+      taskDescription.classList.remove("description-check");
     }
   });
 
-  const liText = document.createElement('div');
-  liText.classList.add('task-description');
-  liText.textContent = task.description;
+  const liText = document.createElement("input");
+  liText.type = "text";
+  liText.disabled = true;
+  liText.value = task.description;
+  liText.classList.add("task-description");
+  liText.addEventListener("keyup", (e) => {
+    if (e.key === "Enter") {
+      TaskOperationsHelper.edit(task.index, e.target.value);
+      LocalStorageHelper.updateEntryInLocalStorage(
+        tasksKeyInLocalStorage,
+        tasksList
+      );
+      loadList();
+      e.target.disabled = true;
+      e.target.blur();
+    }
+  });
   if (task.completed) {
-    liText.classList.add('description-check');
+    liText.classList.add("description-check");
   }
 
-  const icon = document.createElement('a');
-  icon.classList.add('fas', 'fa-ellipsis-v', 'task-link');
+  const editBtn = document.createElement("a");
+  editBtn.classList.add("fas", "fa-ellipsis-v", "task-link");
+  editBtn.id = "edit-btn";
+
+  editBtn.addEventListener("click", (e) => {
+    e.target.classList.add("d-none");
+    let deleteBtn = e.target.parentNode.querySelector("#delete-btn");
+    deleteBtn.classList.remove("d-none");
+
+    let taskDescription =
+      e.target.parentNode.querySelector(".task-description");
+    taskDescription.disabled = false;
+    taskDescription.focus();
+  });
+
+  const deleteBtn = document.createElement("a");
+  deleteBtn.classList.add("far", "fa-trash-alt", "task-link", "d-none");
+  deleteBtn.id = "delete-btn";
+
+  deleteBtn.addEventListener("click", (e) => {
+    TaskOperationsHelper.remove(task.index);
+    LocalStorageHelper.updateEntryInLocalStorage(
+      tasksKeyInLocalStorage,
+      tasksList
+    );
+    loadList();
+  });
 
   containerDivForCheckText.appendChild(liCheckBox);
   containerDivForCheckText.appendChild(liText);
   li.appendChild(containerDivForCheckText);
-  li.appendChild(icon);
+  li.appendChild(editBtn);
+  li.appendChild(deleteBtn);
 
   return li;
 }
@@ -69,17 +94,46 @@ function loadList() {
   if (
     LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage) !== null
   ) {
-    tasksList = LocalStorageHelper.retrieveFromLocalStorage(
-      tasksKeyInLocalStorage,
+    let tasks = LocalStorageHelper.retrieveFromLocalStorage(
+      tasksKeyInLocalStorage
     );
+    TaskOperationsHelper.removeAll();
+    TaskOperationsHelper.addMultiple(tasks);
   } else {
     LocalStorageHelper.addToLocalStorage(tasksKeyInLocalStorage, tasksList);
   }
   tasksList.sort((a, b) => a.index - b.index);
-  const tasksUL = document.querySelector('#tasks');
+  let tasksUL = document.querySelector("#tasks");
+  tasksUL.innerHTML = "";
   tasksList.forEach((task) => {
     tasksUL.appendChild(createLiForTask(task));
   });
 }
 
 loadList();
+
+// add event listeners for input
+let taskInput = document.querySelector("#task-input");
+taskInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter" && e.target.value != "") {
+    let task = new Task(tasksList.length, e.target.value);
+    TaskOperationsHelper.addNew(task);
+    LocalStorageHelper.updateEntryInLocalStorage(
+      tasksKeyInLocalStorage,
+      tasksList
+    );
+    loadList();
+    e.target.value = "";
+  }
+});
+
+// clear all completed tasks
+let clearAllCompletedTasksBtn = document.querySelector("#clear-all-completed");
+clearAllCompletedTasksBtn.addEventListener("click", () => {
+  TaskOperationsHelper.removeAllCompleted();
+  LocalStorageHelper.updateEntryInLocalStorage(
+    tasksKeyInLocalStorage,
+    tasksList
+  );
+  loadList();
+});
