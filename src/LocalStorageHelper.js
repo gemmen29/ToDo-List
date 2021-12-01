@@ -1,5 +1,4 @@
-export default class LocalStorageHelper 
-{
+export default class LocalStorageHelper {
   static addToLocalStorage(key, tasksList) {
     localStorage.setItem(key, JSON.stringify(tasksList));
   }
