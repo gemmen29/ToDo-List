@@ -1,8 +1,8 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
-# Project Name
+# ToDo List
 
-> One paragraph statement about the project.
+> This is a website for managing the daily tasks.
 
 ![screenshot](./app_screenshot.png)
 
@@ -10,50 +10,33 @@ Additional description about the project and its features.
 
 ## Built With
 
-- Major languages
-- Frameworks
-- Technologies used
+- HTML
+- CSS
+- Javascript
+- Webpacks
 
 ## Live Demo
 
-[Live Demo Link](https://livedemo.com)
+[Live Demo Link](https://gemmen29.github.io/ToDo-List/)
 
 
 ## Getting Started
 
-**This is an example of how you may give instructions on setting up your project locally.**
-**Modify this file to match your project, remove sections that don't apply. For example: delete the testing section if the currect project doesn't require testing.**
-
-
 To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-### Setup
+- Click on the top right green "code" button.
+- On the dropdown menu, choose "download with zip" button.
+- After download, extract the zip file and you have the project running on your machine.
 
 ### Install
-
-### Usage
-
-### Run tests
-
-### Deployment
-
-
+- Node
 
 ## Authors
 
-👤 **Author1**
+👤 **George Magdy**
 
-- GitHub: [@githubhandle](https://github.com/githubhandle)
-- Twitter: [@twitterhandle](https://twitter.com/twitterhandle)
-- LinkedIn: [LinkedIn](https://linkedin.com/in/linkedinhandle)
-
-👤 **Author2**
-
-- GitHub: [@githubhandle](https://github.com/githubhandle)
-- Twitter: [@twitterhandle](https://twitter.com/twitterhandle)
-- LinkedIn: [LinkedIn](https://linkedin.com/in/linkedinhandle)
+- GitHub: [@George_Magdy](https://github.com/gemmen29)
+- Twitter: [@George_Magdy](https://twitter.com/georgtriple1)
+- LinkedIn: [@George_Magdy](https://www.linkedin.com/in/george-magdy-840/)
 
 ## 🤝 Contributing
 
