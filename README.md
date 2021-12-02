@@ -17,7 +17,7 @@ Additional description about the project and its features.
 
 ## Live Demo
 
-[Live Demo Link](https://gemmen29.github.io/ToDo-List/)
+[Live Demo Link](https://gemmen29.github.io/ToDo-List/dist/)
 
 
 ## Getting Started
