@@ -1,7 +1,6 @@
 import './style.css';
 
 import LocalStorageHelper from './LocalStorageHelper';
-import UpdateStatusHelper from './UpdateStatusHelper';
 import TaskOperationsHelper from './TaskOperationsHelper';
 import Task from './TaskClass';
 
@@ -18,7 +17,7 @@ class LoadContent {
     liCheckBox.checked = task.completed;
 
     liCheckBox.addEventListener('change', (e) => {
-      UpdateStatusHelper.toggleStatus(
+      TaskOperationsHelper.toggleStatus(
         task.index,
         TaskOperationsHelper.tasksList,
       );
@@ -104,21 +103,10 @@ class LoadContent {
   }
 
   static loadList() {
-    if (
-      LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage)
-      !== null
-    ) {
-      const tasks = LocalStorageHelper.retrieveFromLocalStorage(
-        tasksKeyInLocalStorage,
-      );
-      TaskOperationsHelper.removeAll();
-      TaskOperationsHelper.addMultiple(tasks);
-    } else {
-      LocalStorageHelper.addToLocalStorage(
-        tasksKeyInLocalStorage,
-        TaskOperationsHelper.tasksList,
-      );
-    }
+    const tasks = LocalStorageHelper.retrieveFromLocalStorage(
+      tasksKeyInLocalStorage,
+    ) || [];
+    TaskOperationsHelper.tasksList = tasks;
     TaskOperationsHelper.tasksList.sort((a, b) => a.index - b.index);
     const tasksUL = document.querySelector('#tasks');
     tasksUL.innerHTML = '';

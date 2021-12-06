@@ -9,42 +9,40 @@ export default class TaskOperationsHelper {
     }
   }
 
+  static reIndex() {
+    TaskOperationsHelper.tasksList.forEach((task, counter) => {
+      task.index = counter;
+    });
+  }
+
   static remove(index) {
-    let c = 0;
-    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList
-      .filter((task) => task.index !== index)
-      .map((task) => {
-        task.index = c;
-        c += 1;
-        return task;
-      });
+    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList.filter(
+      (task) => task.index !== index,
+    );
+    TaskOperationsHelper.reIndex();
   }
 
   static edit(index, newDescription) {
-    TaskOperationsHelper.tasksList.map((task) => {
+    TaskOperationsHelper.tasksList.forEach((task) => {
       if (index === task.index) {
         task.description = newDescription;
       }
-      return task;
     });
   }
 
   static removeAllCompleted() {
-    let c = 0;
-    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList
-      .filter((task) => !task.completed)
-      .map((task) => {
-        task.index = c;
-        c += 1;
-        return task;
-      });
+    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList.filter(
+      (task) => !task.completed,
+    );
+    TaskOperationsHelper.reIndex();
   }
 
-  static addMultiple(tasks) {
-    TaskOperationsHelper.tasksList.push(...tasks);
-  }
-
-  static removeAll() {
-    TaskOperationsHelper.tasksList = [];
+  static toggleStatus(index, tasksList) {
+    tasksList.map((task) => {
+      if (index === task.index) {
+        task.completed = !task.completed;
+      }
+      return task;
+    });
   }
 }
