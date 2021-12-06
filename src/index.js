@@ -143,6 +143,7 @@ taskInput.addEventListener('keyup', (e) => {
       tasksKeyInLocalStorage,
       TaskOperationsHelper.tasksList,
     );
+    
     LoadContent.loadList();
     e.target.value = '';
   }
