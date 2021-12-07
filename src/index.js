@@ -1,9 +1,7 @@
 import './style.css';
 
 import LocalStorageHelper from './LocalStorageHelper';
-import UpdateStatusHelper from './UpdateStatusHelper';
-import TaskOperationsHelper from './TaskOperationsHelper';
-import Task from './TaskClass';
+import TaskHelper from './TaskHelper';
 
 const tasksKeyInLocalStorage = 'tasks-list';
 class LoadContent {
@@ -18,13 +16,13 @@ class LoadContent {
     liCheckBox.checked = task.completed;
 
     liCheckBox.addEventListener('change', (e) => {
-      UpdateStatusHelper.toggleStatus(
+      TaskHelper.toggleStatus(
         task.index,
-        TaskOperationsHelper.tasksList,
+        TaskHelper.tasksList,
       );
       LocalStorageHelper.updateEntryInLocalStorage(
         tasksKeyInLocalStorage,
-        TaskOperationsHelper.tasksList,
+        TaskHelper.tasksList,
       );
 
       const taskDescription = e.target.parentNode.querySelector('.task-description');
@@ -52,10 +50,10 @@ class LoadContent {
     });
     liText.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
-        TaskOperationsHelper.edit(task.index, e.target.value);
+        TaskHelper.edit(task.index, e.target.value);
         LocalStorageHelper.updateEntryInLocalStorage(
           tasksKeyInLocalStorage,
-          TaskOperationsHelper.tasksList,
+          TaskHelper.tasksList,
         );
         LoadContent.loadList();
         e.target.disabled = true;
@@ -86,10 +84,10 @@ class LoadContent {
     deleteBtn.id = 'delete-btn';
 
     deleteBtn.addEventListener('click', () => {
-      TaskOperationsHelper.remove(task.index);
+      TaskHelper.remove(task.index);
       LocalStorageHelper.updateEntryInLocalStorage(
         tasksKeyInLocalStorage,
-        TaskOperationsHelper.tasksList,
+        TaskHelper.tasksList,
       );
       LoadContent.loadList();
     });
@@ -104,25 +102,14 @@ class LoadContent {
   }
 
   static loadList() {
-    if (
-      LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage)
-      !== null
-    ) {
-      const tasks = LocalStorageHelper.retrieveFromLocalStorage(
-        tasksKeyInLocalStorage,
-      );
-      TaskOperationsHelper.removeAll();
-      TaskOperationsHelper.addMultiple(tasks);
-    } else {
-      LocalStorageHelper.addToLocalStorage(
-        tasksKeyInLocalStorage,
-        TaskOperationsHelper.tasksList,
-      );
-    }
-    TaskOperationsHelper.tasksList.sort((a, b) => a.index - b.index);
+    const tasks = LocalStorageHelper.retrieveFromLocalStorage(
+      tasksKeyInLocalStorage,
+    ) || [];
+    TaskHelper.tasksList = tasks;
+    TaskHelper.tasksList.sort((a, b) => a.index - b.index);
     const tasksUL = document.querySelector('#tasks');
     tasksUL.innerHTML = '';
-    TaskOperationsHelper.tasksList.forEach((task) => {
+    TaskHelper.tasksList.forEach((task) => {
       tasksUL.appendChild(LoadContent.createLiForTask(task));
     });
   }
@@ -134,14 +121,14 @@ LoadContent.loadList();
 const taskInput = document.querySelector('#task-input');
 taskInput.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && e.target.value !== '') {
-    const task = new Task(
-      TaskOperationsHelper.tasksList.length,
+    const task = new TaskHelper(
+      TaskHelper.tasksList.length,
       e.target.value,
     );
-    TaskOperationsHelper.addNew(task);
+    TaskHelper.addNew(task);
     LocalStorageHelper.updateEntryInLocalStorage(
       tasksKeyInLocalStorage,
-      TaskOperationsHelper.tasksList,
+      TaskHelper.tasksList,
     );
 
     LoadContent.loadList();
@@ -154,10 +141,10 @@ const clearAllCompletedTasksBtn = document.querySelector(
   '#clear-all-completed',
 );
 clearAllCompletedTasksBtn.addEventListener('click', () => {
-  TaskOperationsHelper.removeAllCompleted();
+  TaskHelper.removeAllCompleted();
   LocalStorageHelper.updateEntryInLocalStorage(
     tasksKeyInLocalStorage,
-    TaskOperationsHelper.tasksList,
+    TaskHelper.tasksList,
   );
   LoadContent.loadList();
 });
