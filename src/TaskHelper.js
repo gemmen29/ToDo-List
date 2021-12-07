@@ -1,29 +1,33 @@
-import Task from './TaskClass';
-
-export default class TaskOperationsHelper {
+export default class TaskHelper {
   static tasksList = [];
 
+  constructor(index, description) {
+    this.index = index;
+    this.description = description;
+    this.completed = false;
+  }
+
   static addNew(task) {
-    if (task instanceof Task) {
-      TaskOperationsHelper.tasksList.push(task);
+    if (task instanceof TaskHelper) {
+      TaskHelper.tasksList.push(task);
     }
   }
 
-  static reIndex() {
-    TaskOperationsHelper.tasksList.forEach((task, counter) => {
+  static reAssignIndex() {
+    TaskHelper.tasksList.forEach((task, counter) => {
       task.index = counter;
     });
   }
 
   static remove(index) {
-    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList.filter(
+    TaskHelper.tasksList = TaskHelper.tasksList.filter(
       (task) => task.index !== index,
     );
-    TaskOperationsHelper.reIndex();
+    TaskHelper.reAssignIndex();
   }
 
   static edit(index, newDescription) {
-    TaskOperationsHelper.tasksList.forEach((task) => {
+    TaskHelper.tasksList.forEach((task) => {
       if (index === task.index) {
         task.description = newDescription;
       }
@@ -31,10 +35,10 @@ export default class TaskOperationsHelper {
   }
 
   static removeAllCompleted() {
-    TaskOperationsHelper.tasksList = TaskOperationsHelper.tasksList.filter(
+    TaskHelper.tasksList = TaskHelper.tasksList.filter(
       (task) => !task.completed,
     );
-    TaskOperationsHelper.reIndex();
+    TaskHelper.reAssignIndex();
   }
 
   static toggleStatus(index, tasksList) {
