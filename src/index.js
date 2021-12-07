@@ -2,7 +2,6 @@ import './style.css';
 
 import LocalStorageHelper from './LocalStorageHelper';
 import TaskHelper from './TaskHelper';
-import Task from './TaskClass';
 
 const tasksKeyInLocalStorage = 'tasks-list';
 class LoadContent {
