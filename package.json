@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "jest --env=jsdom --coverage",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
     "build": "webpack"

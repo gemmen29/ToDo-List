@@ -1,7 +1,4 @@
-import "./style.css";
-
-import LocalStorageHelper from "./LocalStorageHelper";
-import TaskHelper from "./TaskHelper";
+import TaskHelper from "../TaskHelper";
 
 const tasksKeyInLocalStorage = "tasks-list";
 export default class LoadContent {
@@ -17,10 +14,6 @@ export default class LoadContent {
 
     liCheckBox.addEventListener("change", (e) => {
       TaskHelper.toggleStatus(task.index, TaskHelper.tasksList);
-      LocalStorageHelper.updateEntryInLocalStorage(
-        tasksKeyInLocalStorage,
-        TaskHelper.tasksList
-      );
 
       const taskDescription =
         e.target.parentNode.querySelector(".task-description");
@@ -105,9 +98,7 @@ export default class LoadContent {
   }
 
   static loadList() {
-    const tasks =
-      LocalStorageHelper.retrieveFromLocalStorage(tasksKeyInLocalStorage) || [];
-    TaskHelper.tasksList = tasks;
+    //    const tasks = TaskHelper.tasksList;
     TaskHelper.tasksList.sort((a, b) => a.index - b.index);
     const tasksUL = document.querySelector("#tasks");
     tasksUL.innerHTML = "";
@@ -116,34 +107,3 @@ export default class LoadContent {
     });
   }
 }
-
-LoadContent.loadList();
-
-// add event listeners for input
-const taskInput = document.querySelector("#task-input");
-taskInput.addEventListener("keyup", (e) => {
-  if (e.key === "Enter" && e.target.value !== "") {
-    const task = new TaskHelper(TaskHelper.tasksList.length, e.target.value);
-    TaskHelper.addNew(task);
-    LocalStorageHelper.updateEntryInLocalStorage(
-      tasksKeyInLocalStorage,
-      TaskHelper.tasksList
-    );
-
-    LoadContent.loadList();
-    e.target.value = "";
-  }
-});
-
-// clear all completed tasks
-const clearAllCompletedTasksBtn = document.querySelector(
-  "#clear-all-completed"
-);
-clearAllCompletedTasksBtn.addEventListener("click", () => {
-  TaskHelper.removeAllCompleted();
-  LocalStorageHelper.updateEntryInLocalStorage(
-    tasksKeyInLocalStorage,
-    TaskHelper.tasksList
-  );
-  LoadContent.loadList();
-});
