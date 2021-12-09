@@ -16,7 +16,7 @@ export default class LoadContent {
     liCheckBox.checked = task.completed;
 
     liCheckBox.addEventListener('change', (e) => {
-      TaskHelper.toggleStatus(task.index, TaskHelper.tasksList);
+      TaskHelper.toggleStatus(task.index);
       LocalStorageHelper.updateEntryInLocalStorage(
         tasksKeyInLocalStorage,
         TaskHelper.tasksList,
