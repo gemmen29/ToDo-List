@@ -41,8 +41,8 @@ export default class TaskHelper {
     TaskHelper.reAssignIndex();
   }
 
-  static toggleStatus(index, tasksList) {
-    tasksList.map((task) => {
+  static toggleStatus(index) {
+    TaskHelper.tasksList.map((task) => {
       if (index === task.index) {
         task.completed = !task.completed;
       }
